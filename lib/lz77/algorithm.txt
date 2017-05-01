@@ -1,0 +1,32 @@
+LZ77
+====
+
+Compresses a buffer using an implementation of LZ77.
+
+The output buffer will contain chunks of data.
+
+    OUTPUT := *CHUNK
+
+The chunks can be either literals or a section to replicate.
+
+    CHUNK := LITERAL | REPLICATE
+
+Literals are encoded as a length designator and the literal bytes. The length designator is equal to the number of bytes following the designator, minus one (the minimum is 1 literal byte). The length designator must have the high two bits off, so the encoded length is between 0 and 63, resulting in 1 to 64 bytes following the length byte. When more than 64 bytes need to be encoded as a literal, multiple literals are added to the output.
+
+    LITERAL := LENGTH 1*BYTES
+    LENGTH := 00xx xxxx (binary)
+
+When replicating previous data in the buffer, it is encoded using two or three bytes.
+
+    REPLICATE := REPLICATE_SHORT | REPLICATE_LONG
+    REPLICATE_SHORT := DISTANCE_SHORT BYTECOUNT
+    REPLICATE_LONG := DISTANCE_LONG BYTECOUNT
+
+The distances are essentially the same but have a different leading set of bits. Short distances can be 128 bytes backwards and long distances can be up to 2^14 (16513) bytes backwards. Encoded short distances have one subtracted because we must move backwards at least one byte. Encoded long distances have 129 subtracted because otherwise they'd be in the short category.
+
+    DISTANCE_SHORT := 1xxx xxxx (binary)
+    DISTANCE_LONG := 01xx xxxx xxxx xxxx (binary)
+
+Because compression must copy at least 3 characters to be beneficial (4 bytes for long distances), the actual byte count minus three is stored as the encoded byte count. This allows for 259 bytes to be copied.
+
+The leading bits of 00 for literals, 1 for short distances an 01 for long distances were chosen to maximize the ability to compress nearby repetitive strings.

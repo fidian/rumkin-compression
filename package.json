@@ -1,0 +1,35 @@
+{
+    "name": "rumkin-compression",
+    "private": "true",
+    "description": "Compression routines for the rumkin.com website.",
+    "main": "lib/index.js",
+    "scripts": {
+        "test": "script/test",
+        "watch": "script/watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fidian/rumkin-compression.git"
+    },
+    "keywords": [],
+    "author": "Tyler Akins <fidian@rumkin.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/fidian/rumkin-compression/issues"
+    },
+    "homepage": "https://github.com/fidian/rumkin-compression#readme",
+    "devDependencies": {
+        "codecov": "^2.1.0",
+        "eslint": "^3.18.0",
+        "istanbul": "^0.4.5",
+        "jasmine": "^2.5.3",
+        "neodoc": "^1.4.0",
+        "nodemon": "^1.11.0",
+        "read-file-stdin": "^0.2.1"
+    },
+    "dependencies": {
+        "debug": "^2.6.6",
+        "@fidian/dynamic-buffer": "^1.0.0",
+        "more-promises": "^1.1.1"
+    }
+}

@@ -1,0 +1,42 @@
+LZ77-ASCII
+==========
+
+Compresses a buffer using an implementation of LZ77 that is designed to produce an ASCII string as output, using only characters that need no escaping in JavaScript in a doubly-quoted string. The decompresser is also made to be as minimal as possible. Does not work with Unicode but should work with UTF-8 encoded strings.
+
+The compressed information is made from the following characters. They were chosen because they are largely sequential and don't require special escaping. The worst one is the backslash (`\`, 0x5C and would appear between `[` and `]`). Removing that character was an acceptable amount of loss.
+
+    12, literal designators:  #$%&'()*+,-.
+    45, long encoding: /0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[
+    34, short encoding: ]^_`abcdefghijklmnopqrstuvwxyz{|}~
+    -----
+    91 bytes
+
+Literals can include any character, including backslash, double quotes, and everything else. The goal is that they are condensed out of the picture and encoding them as literals will have as little impact as possible.
+
+The output string is made of chunks of data.
+
+    OUTPUT := *CHUNK
+
+The chunks can be either literals or a section to replicate.
+
+    CHUNK := LITERAL | REPLICATE
+
+Literals are encoded as a length designator and the literal bytes. The length designator is equal to the number of bytes following the designator, minus one (the minimum is 1 literal byte). Because we're encoding this as a string, we can only encode lengths up to 12 bytes. If it is longer than that, we encode multiple chunks of literals. So, a LENGTH code of "#" means 1 byte.
+
+    LITERAL := LENGTH 1*BYTES
+    LENGTH := "#" | "$" | "%" | "&" | "'" | "(" |
+              ")" | "*" | "+" | "," | "-" | "."
+
+When replicating previous data in the buffer, it is encoded using two or
+three bytes. When replicating only 3 characters, only the distance is used. With four or more characters, there's a byte count and a distance.
+
+    REPLICATE := REPLICATE_SHORT | REPLICATE_LONG
+    REPLICATE_SHORT := DISTANCE_SHORT
+    REPLICATE_LONG := BYTECOUNT DISTANCE_LONG
+
+The byte count must be a number between 4 and 48, which is encoded. The value of 4 is "/", 5 is "0", etc.
+
+    BYTECOUNT := "/" | "0" | ... | "9" | ":" | ";" | "<" | "=" | ">" |
+                 "?" | "@" | "A" | ... | "Z" | "["
+
+The two distances are essentially the same. For both, the number is split into two base-91 characters. The low is distance % 91, the high is the integer portion of distance / 91. Short encoding sequences (3 bytes) are restricted to 35 * 91 characters back because the high portion has 57 added. Long distances can use the full 91 * 91 distance.
