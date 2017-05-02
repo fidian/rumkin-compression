@@ -1,0 +1,4 @@
+Huffman ASCII
+=============
+
+This is identical to the Huffman compressor/decompressor except it encodes 6 bits per byte, encoded using Base64.

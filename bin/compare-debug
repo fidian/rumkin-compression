@@ -6,8 +6,8 @@ CMD=("DEBUG=*" "${0%/*}/test.js" "$@" "2>&1" ">/dev/null")
 echo "Running: ${CMD[*]}"
 OUTPUT=$(eval "${CMD[@]}")
 
-COMPRESS=$(echo "$OUTPUT" | grep -- "-compress " | cut -d " " -f 8-)
-DECOMPRESS=$(echo "$OUTPUT" | grep -- "-decompress " | cut -d " " -f 8-)
+COMPRESS=$(echo "$OUTPUT" | grep -- "-compress" | cut -d " " -f 8-)
+DECOMPRESS=$(echo "$OUTPUT" | grep -- "-decompress" | cut -d " " -f 8-)
 
 echo Running diff
 echo "--- compress"

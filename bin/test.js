@@ -15,7 +15,7 @@ function help() {
 Usage:
 
     test.js (compress | decompress | both | decompress-tiny | both-tiny)
-        (huffman | lz77 | lz77-ascii)
+        (huffman | huffman-ascii | lz77 | lz77-ascii)
         [FILENAME]
 `;
 }
@@ -81,6 +81,10 @@ readFileStdin(options.FILENAME, (err, buffer) => {
             huffman: {
                 inputType: "buffer",
                 group: compression.huffman
+            },
+            "huffman-ascii": {
+                inputType: "string",
+                group: compression.huffmanAscii
             },
             lz77: {
                 inputType: "buffer",
