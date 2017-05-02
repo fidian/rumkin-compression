@@ -9,14 +9,54 @@ These are the ciphers that are used to power the pages involving compression at 
 [![codecov.io][codecov-badge]][codecov-link]
 
 
-Exports
--------
+Available Libraries
+-------------------
 
-    compression = require("rumkin-compression");
+* `huffman` - A [Huffman] encoder for `Buffer` objects.
+* `huffmanAscii` - [Huffman] encoding of strings. Results are in Base64.
+* `lz77` - Implementation of [LZ77] for `Buffer` objects.
+* `lz77` - [LZ77] that uses a custom Base91 encoding.
 
-The exported object from the library includes the following encryption techniques.
 
-There are tiny, synchronous functions of decompressors available for use in web pages. They are self-contained functions, so you could call `.toString()` on the functions to minify them.
+How to Use
+----------
+
+Every library exports the same interface. It can be called synchronously or asynchronously.
+
+    // First, pick your library.
+    var library = require("rumkin-compression").lz77;
+
+    // Synchronous compression and decompression.
+    resultBuffer = library.compressSync(inputBuffer);
+    decompressedBuffer = library.decompressSync(resultBuffer);
+
+    // Promised compression and decompression.
+    library.compressAsync(inputBuffer).then((resultBuffer) => {
+        return library.decompressAsync(resultBuffer);
+    }).then((decompressedBuffer) => { ... });
+
+    // Asynchronous/callback based compression.
+    // Callback definition: callback(err, resultBuffer)
+    // Progress definition: progress(progressDataObject)
+    library.compress(inputBuffer, callbackFn, [progressFn]);
+    library.decompress(inputBuffer, callbackFn, [progressFn]);
+
+    // Managing the async/sync stuff yourself.
+    compressor = library.compressDirect(inputBuffer);
+    decompressor = library.decompressDirect(inputBuffer);
+
+    // Tiny sync version of a decompressor for a browser.
+    // For ASCII flavors, this takes the encoded string. For the Buffer
+    // variants, this takes a Buffer or any array-like thing where the values
+    // are the character codes (eg. input[0] == 97). They always return a
+    // string.
+    result = library.decompressTiny(inputBufferOrTypedArray);
+
+
+Making Tiny Tinier
+------------------
+
+The tiny, synchronous functions of decompressors available for use in web pages. They are self-contained functions, so you could call `.toString()` on the functions to minify them.
 
     // Minifying a tiny decompressor by using `.toString()` on the exported
     // function. This isn't very fun and you could just minify the file
@@ -29,65 +69,9 @@ There are tiny, synchronous functions of decompressors available for use in web 
         ... other options ...
     });
 
+Alternately, you can minify from the command line.
 
-LZ77
-----
-
-An implementation of [LZ77] that works on `Buffer` objects.
-
-    // Synchronous compression and decompression.
-    resultBuffer = compression.lz77.compressSync(inputBuffer);
-    decompressedBuffer = compression.lz77.decompressSync(resultBuffer);
-
-    // Promised compression and decompression.
-    compression.lz77.compressAsync(inputBuffer).then((resultBuffer) => {
-        return compression.lz77.decompressAsync(resultBuffer);
-    }).then((decompressedBuffer) => { ... });
-
-    // Asynchronous/callback based compression.
-    // Callback definition: callback(err, resultBuffer)
-    // Progress definition: progress(progressDataObject)
-    compression.lz77.compress(inputBuffer, callbackFn, [progressFn]);
-    compression.lz77.decompress(inputBuffer, callbackFn, [progressFn]);
-
-    // Managing the async/sync stuff yourself.
-    compressor = compression.lz77.compressDirect(inputBuffer);
-    decompressor = compression.lz77.decompressDirect(inputBuffer);
-
-    // Tiny sync version of a decompressor for a browser. Takes a Buffer or
-    // any array-like thing where the values are the character codes. Returns
-    // a string.
-    result = compression.lz77.decompressTiny(inputBufferOrTypedArray);
-
-
-LZ77 Ascii
-----------
-
-An implementation of [LZ77] that encodes strings to ASCII by relying on a base-91 encoding scheme for the control characters.
-
-    // Synchronous compression and decompression.
-    resultString = compression.lz77Ascii.compressSync(inputString);
-    decompressedString = compression.lz77Ascii.decompressSync(resultString);
-
-    // Promised compression and decompression.
-    compression.lz77Ascii.compressAsync(inputString).then((resultString) => {
-        return compression.lz77Ascii.decompressAsync(resultString);
-    }).then((decompressedString) => { ... });
-
-    // Asynchronous/callback based compression.
-    // Callback definition: callback(err, resultString)
-    // Progress definition: progress(progressDataObject)
-    compression.lz77Ascii.compress(inputString, callbackFn, [progressFn]);
-    compression.lz77Ascii.decompress(inputString, callbackFn, [progressFn]);
-
-    // Managing the async/sync stuff yourself.
-    compressor = compression.lz77Ascii.compressDirect(inputString);
-    decompressor = compression.lz77Ascii.decompressDirect(inputString);
-
-    // Tiny sync version of a decompressor for a browser. This is a self-
-    // contained function so you can use .toString() and apply it anywhere.
-    // Accepts a string and returns a string.
-    result = compression.lz77Ascii.decompressTiny(inputString);
+    uglifyjs node-modules/rumkin-compression/lib/lz77/decompress-tiny.js --screw-ie8 -m -c
 
 
 Installation
@@ -122,6 +106,7 @@ This software is licensed under a [MIT license][LICENSE] that contains additiona
 [dependencies-link]: https://david-dm.org/tests-always-included/xxxxxx
 [devdependencies-badge]: https://img.shields.io/david/dev/tests-always-included/xxxxxx.svg
 [devdependencies-link]: https://david-dm.org/tests-always-included/xxxxxx#info=devDependencies
+[Huffman]: https://en.wikipedia.org/wiki/Huffman_coding
 [LICENSE]: LICENSE.md
 [LZ77]: https://en.wikipedia.org/wiki/LZ77_and_LZ78
 [npm-badge]: https://img.shields.io/npm/v/xxxxxx.svg
