@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Run the test script with debug enabled. Doesn't catch when you screw up
+# the arguments, so be wary.
+CMD=("DEBUG=*" "${0%/*}/test.js" "$@" "2>&1" ">/dev/null")
+echo "Running: ${CMD[*]}"
+OUTPUT=$(eval "${CMD[@]}")
+
+COMPRESS=$(echo "$OUTPUT" | grep -- "-compress " | cut -d " " -f 8-)
+DECOMPRESS=$(echo "$OUTPUT" | grep -- "-decompress " | cut -d " " -f 8-)
+
+echo Running diff
+echo "--- compress"
+echo "+++ decompress"
+diff -wU10 <(echo "$COMPRESS") <(echo "$DECOMPRESS")

@@ -19,10 +19,8 @@
     },
     "homepage": "https://github.com/fidian/rumkin-compression#readme",
     "devDependencies": {
-        "codecov": "^2.1.0",
-        "eslint": "^3.18.0",
-        "istanbul": "^0.4.5",
-        "jasmine": "^2.5.3",
+        "eslint": "^3.19.0",
+        "jasmine": "^2.6.0",
         "neodoc": "^1.4.0",
         "nodemon": "^1.11.0",
         "read-file-stdin": "^0.2.1"

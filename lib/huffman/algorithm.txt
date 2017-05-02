@@ -1,0 +1,78 @@
+Huffman
+=======
+
+Compresses a buffer using an implementation of Huffman encoding.
+
+First, scan the input letters and determine their frequencies. Here is a sample, with spaces replaced by underscores and the end of message marker as a `#` for ease of explanation.
+
+    Once_I_saw_a_piece_of_toast.#
+
+    #: 1
+    .: 1
+    _: 6
+    O: 1
+    I: 1
+    a: 3
+    c: 2
+    e: 3
+    f: 1
+    i: 1
+    n: 1
+    o: 2
+    p: 1
+    s: 2
+    t: 2
+    w: 1
+
+Next, arrange them into a tree, where higher frequency letters are higher in the tree. The method of building the tree doesn't really matter, but it usually starts by collecting most infrequently used nodes and combining them into one mini tree, then repeating the process until they are all accumulated in one fairly balanced tree.
+
+
+
+                         ...............^...............
+                 .......^.......                 .......^.......
+             ...^...            _            ...^...         ...^...
+           .^.     .^.                      ^       ^       ^       e
+          ^   ^   ^   ^                    p w     s t     a #
+         . O I f c o i n
+
+Assuming that 0 means left and 1 means right, we can start at the root of the tree and encode each character. The longest code is 5 bits.
+
+    #: 1101
+    .: 00000
+    _: 01
+    O: 00001
+    I: 00010
+    a: 1100
+    c: 00100
+    e: 111
+    f: 00011
+    i: 00110
+    n: 00111
+    o: 00101
+    p: 1000
+    s: 1010
+    t: 1011
+    w: 1001
+
+This turns our phrase into these codes.
+
+    00001 00111 00100 111 01 00010 01 1010 1100 1001 01 1100 01
+    1000 00110 111 00100 111 01 00101 00011 01 1011 00101 1100 1010 1011 00000
+    1101
+
+In total, our 28 character string (8 bits per letter = 224 bits) can be compressed to a stream of 107 bits. After this we need a way of encoding the tree and prepending the tree to the output.
+
+There are two types of nodes: a decision node where you go left or right and a terminus node where you have finally figured out what letter to add. A "0" means it is an 8-bit character node and "1" means there is a decision node. A breadth-first approach is used to help avoid recursion.
+
+The above tree could be encoded like the following, with the letters inserted instead of their binary so it is more obvious for this example.
+
+    root node:  1
+    Next level is just two more: 1 1
+    Next level has the _: 1 0_ 1 1
+    Next level: 1 1 1 1 1 0e
+    Next: 1 1 1 1 0p 0w 0s 0t 0a 0#
+    Final: 0. 0O 0I 0f 0c 0o 0i 0n
+
+Using this method, the encoded table takes 1 bit per node plus 9 bits per character (8 bits is normal, but we need to have the "stop code". The above tree is 31 nodes and 16 distinct codes, so 179 bits.
+
+Our encoder changed the original 224 bits into 107 bits of compressed data and 179 bits of a table. So 224 bits became 282 bits. Not very good compression, but it significantly improves when you use it on larger amounts of text.
