@@ -1,6 +1,6 @@
 {
-    "name": "rumkin-compression",
-    "private": "true",
+    "name": "@fidian/rumkin-compression",
+    "version": "1.0.0",
     "description": "Compression routines for the rumkin.com website.",
     "main": "lib/index.js",
     "scripts": {

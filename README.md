@@ -77,13 +77,17 @@ Alternately, you can minify from the command line.
 Installation
 ------------
 
-This is not a published package. If you want it, bug me and I'll probably publish it.  Until then, add this to your `package.json` file and fetch it with `npm install`.
+Use `npm` to install this package easily.
+
+    $ npm install --save @fidian/rumkin-compression
+
+Alternately you may edit your `package.json` and add this to your `dependencies` object:
 
     {
         ...
         "dependencies": {
             ...
-            "rumkin-compression": "fidian/rumkin-compression#master"
+            "@fidian/rumkin-compression": "*"
             ...
         }
         ...
