@@ -24,7 +24,7 @@ How to Use
 Every library exports the same interface. It can be called synchronously or asynchronously.
 
     // First, pick your library.
-    var library = require("rumkin-compression").lz77;
+    var library = require("@fidian/rumkin-compression").lz77;
 
     // Synchronous compression and decompression.
     resultBuffer = library.compressSync(inputBuffer);
@@ -71,7 +71,7 @@ The tiny, synchronous functions of decompressors available for use in web pages.
 
 Alternately, you can minify from the command line.
 
-    uglifyjs node-modules/rumkin-compression/lib/lz77/decompress-tiny.js --screw-ie8 -m -c
+    uglifyjs node-modules/@fidian/rumkin-compression/lib/lz77/decompress-tiny.js --screw-ie8 -m -c
 
 
 Installation
