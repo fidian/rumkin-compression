@@ -38,8 +38,9 @@ Every library exports the same interface. It can be called synchronously or asyn
     // Asynchronous/callback based compression.
     // Callback definition: callback(err, resultBuffer)
     // Progress definition: progress(progressDataObject)
-    library.compress(inputBuffer, callbackFn, [progressFn]);
-    library.decompress(inputBuffer, callbackFn, [progressFn]);
+    // Call the cancel function to abort compression/decompression
+    cancelFn = library.compress(inputBuffer, callbackFn, [progressFn]);
+    cancelFn = library.decompress(inputBuffer, callbackFn, [progressFn]);
 
     // Managing the async/sync stuff yourself.
     compressor = library.compressDirect(inputBuffer);
