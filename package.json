@@ -1,6 +1,6 @@
 {
     "name": "@fidian/rumkin-compression",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Compression routines for the rumkin.com website.",
     "main": "lib/index.js",
     "scripts": {
@@ -19,14 +19,14 @@
     },
     "homepage": "https://github.com/fidian/rumkin-compression#readme",
     "devDependencies": {
-        "eslint": "^3.19.0",
-        "jasmine": "^2.6.0",
-        "neodoc": "^1.4.0",
-        "nodemon": "^1.11.0",
+        "eslint": "^8.16.0",
+        "jasmine": "^4.1.0",
+        "neodoc": "^2.0.2",
+        "nodemon": "^2.0.16",
         "read-file-stdin": "^0.2.1"
     },
     "dependencies": {
-        "debug": "^2.6.6",
+        "debug": "^4.3.4",
         "@fidian/dynamic-buffer": "^1.0.0",
         "more-promises": "^1.1.1"
     }
